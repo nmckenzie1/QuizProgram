@@ -117,10 +117,12 @@ function clearStatusClass(element) {
 
 const questions = [
   {
-    question: 'What is 2 + 2?',
+    question: 'What is the name of the fictional island Jurassic Park is situated on?',
     answers: [
-      { text: '4', correct: true },
-      { text: '22', correct: false }
+      { text: 'Isla Nublar', correct: true },
+      { text: 'Puerto Rico', correct: false },
+      { text: 'Isla Puba', correct: false },
+      { text: 'Oahu', correct: false },
     ]
   },
   {
