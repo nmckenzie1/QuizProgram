@@ -4,18 +4,18 @@ const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById('answer-buttons')
 const hsButton = document.getElementById("hs-btn")
-
+var rightAnswers = document.getElementById("right-answers")
 let shuffledQuestions, currentQuestionIndex
-
+var countRightAnswers = 0;
 var sec = 10;
-let countRightAnswers = 0;
+
+alert("Welcome to the Jurassic Park Movie Quiz! See if you can make it to the end! There are 10 questions and 10 seconds on the clock. Correct answers add 5 seconds and incorrect take 3 away.")
 
 hsButton.addEventListener("click", () => {
   alert("High Scores: " + JSON.stringify(localStorage));
 })
 
 function gameEnd(){
-   alert("Game Over")
    var hsname = prompt("What's your Name?")
    localStorage.setItem(hsname, countRightAnswers);
    document.location.reload()
@@ -29,17 +29,21 @@ nextButton.addEventListener('click', () => {
 })
 
 function startGame() {
+    
     var time = setInterval(myTimer, 1000);
     function myTimer() {
         document.getElementById('timer').innerHTML = sec + "sec left";
         sec--;
         if (sec == -1 || sec < -1) {
             clearInterval(time);
-            gameEnd()
+            $("#question-container").empty();
+            $("#question-container").append("<h1> Quiz ended with a score of: " + countRightAnswers)
+            setTimeout(() => {  gameEnd(); }, 2000);
         }
     }
   startButton.classList.add('hide')
   hsButton.classList.add('hide')
+  rightAnswers.classList.remove('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
   questionContainerElement.classList.remove('hide')
@@ -66,7 +70,6 @@ function showQuestion(question) {
 }
 
 function resetState() {
-  clearStatusClass(document.body)
   nextButton.classList.add('hide')
   while (answerButtonsElement.firstChild) {
     answerButtonsElement.removeChild(answerButtonsElement.firstChild)
@@ -76,18 +79,9 @@ function resetState() {
 function selectAnswer(e) {
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
-  setStatusClass(document.body, correct)
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
-  
-  if (shuffledQuestions.length > currentQuestionIndex + 1) {
-    nextButton.classList.remove('hide')
-  } else {
-    startButton.innerText = 'Restart'
-    startButton.classList.remove('hide')
-    gameEnd()
-  }
   if (selectedButton.dataset = correct) {
     countRightAnswers ++;
     sec += 5;
@@ -95,8 +89,14 @@ function selectAnswer(e) {
    sec -= 3;
  }
 
-
- document.getElementById('right-answers').innerHTML = "Correct Answers: " + countRightAnswers;
+  if (shuffledQuestions.length > currentQuestionIndex + 1) {
+    nextButton.classList.remove('hide')
+  } else {
+    $("#question-container").empty();
+    $("#question-container").append("<h1> Quiz ended with a score of: " + countRightAnswers)
+    setTimeout(() => {  gameEnd(); }, 2000);
+  }
+ 
 }
 
 
@@ -126,35 +126,87 @@ const questions = [
     ]
   },
   {
-    question: 'Who is the best YouTuber?',
+    question: 'What type of DNA was used to help clone the dinosaurs in Jurassic Park?',
     answers: [
-      { text: 'Web Dev Simplified', correct: true },
-      { text: 'Traversy Media', correct: true },
-      { text: 'Dev Ed', correct: true },
-      { text: 'Fun Fun Function', correct: true }
+      { text: 'Frogs', correct: true },
+      { text: 'Birds', correct: false },
+      { text: 'Salamanders', correct: false },
+      { text: 'Alligators', correct: false }
     ]
   },
   {
-    question: 'Is web development fun?',
+    question: 'What year was the original Jurassic Park released?',
     answers: [
-      { text: 'Kinda', correct: false },
-      { text: 'YES!!!', correct: true },
-      { text: 'Um no', correct: false },
-      { text: 'IDK', correct: false }
+      { text: '1989', correct: false },
+      { text: '1995', correct: false },
+      { text: '2000', correct: false },
+      { text: '1993', correct: true }
     ]
   },
   {
-    question: 'What is 4 * 2?',
+    question: 'Who directed Jurassic Park',
     answers: [
-      { text: '6', correct: false },
-      { text: '8', correct: true }
+      { text: 'Quentin Tarentino', correct: false },
+      { text: 'Martin Scorsese', correct: false },
+      { text: 'Stanley Kubrick', correct: false },
+      { text: 'Steven Spielberg', correct: true }
+    ]
+  },
+  {
+    question: 'How long is Jurassic Park?',
+    answers: [
+      { text: '90 Minutes', correct: false },
+      { text: '126 Minutes', correct: true },
+      { text: '200 Minutes', correct: false },
+      { text: '240 Minutes', correct: false }
+    ]
+  },
+  {
+    question: 'What does Dennis Nedry use to attempt to smuggle the embryos off Jurassic Park?',
+    answers: [
+      { text: 'Pringles Can', correct: false },
+      { text: 'Back Pack', correct: false },
+      { text: 'Fanny Pack', correct: false },
+      { text: 'Shaving Cream Can', correct: true }
+    ]
+  },
+  {
+    question: 'Who was the Jurassic Parks programmer?',
+    answers: [
+      { text: 'Neil McKenzie', correct: false },
+      { text: 'Dennis Nedry', correct: true },
+      { text: 'Larry Bird', correct: false },
+      { text: 'Mark Hamill', correct: false }
+    ]
+  },
+  {
+    question: 'Jurassic park is based on a book by the same title written by:',
+    answers: [
+      { text: 'Stephen King', correct: false },
+      { text: 'J.K. Rowling', correct: false },
+      { text: 'Michael Crichton', correct: true },
+      { text: 'J.R.R. Tolkein', correct: false }
+    ]
+  },
+  {
+    question: 'Who composed the music for Jurassic Park?',
+    answers: [
+      { text: 'Trent Reznor', correct: false },
+      { text: 'John Williams', correct: true },
+      { text: 'Hans Zimmer', correct: false },
+      { text: 'Daft Punk', correct: false }
+    ]
+  },
+  {
+    question: 'Who played Dr. Ian Malcolm',
+    answers: [
+      { text: 'Sam Neill', correct: false },
+      { text: 'Wayne Knight', correct: false },
+      { text: 'Jeff Goldblum', correct: true },
+      { text: 'B.D. Wong', correct: false }
     ]
   }
 ]
 
-// var timeOutButton = document.getElementById("timeOutButton")
-//     timeOutButton.addEventListener("click", function () {
-//         window.location.replace("index.html")
-        
-//     })
+
 
